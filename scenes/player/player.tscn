@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://b120player001"]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_script"]
+[ext_resource type="Material" path="res://materials/mat_player.tres" id="2_player"]
+[ext_resource type="Material" path="res://materials/mat_wood.tres" id="3_wood"]
+[ext_resource type="Material" path="res://materials/mat_fire.tres" id="4_fire"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+material = ExtResource("2_player")
+radius = 0.35
+height = 1.3
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+material = ExtResource("2_player")
+radius = 0.28
+height = 0.55
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gold_visor"]
+albedo_color = Color(1, 0.8, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.75, 0.2, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_visor"]
+material = SubResource("StandardMaterial3D_gold_visor")
+size = Vector3(0.3, 0.08, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cape"]
+material = ExtResource("2_player")
+size = Vector3(0.5, 0.9, 0.08)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_torch"]
+material = ExtResource("3_wood")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 0.7
+
+[sub_resource type="SphereMesh" id="SphereMesh_torch_flame"]
+material = ExtResource("4_fire")
+radius = 0.08
+height = 0.16
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_cam"]
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="VisualModel" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="VisualModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="Head" type="MeshInstance3D" parent="VisualModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("SphereMesh_head")
+
+[node name="Visor" type="MeshInstance3D" parent="VisualModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, 0.22)
+mesh = SubResource("BoxMesh_visor")
+
+[node name="Cape" type="MeshInstance3D" parent="VisualModel"]
+transform = Transform3D(1, 0, 0, 0, 0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0, 0.85, -0.25)
+mesh = SubResource("BoxMesh_cape")
+
+[node name="TorchHand" type="Node3D" parent="VisualModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.9, 0.2)
+
+[node name="TorchMesh" type="MeshInstance3D" parent="VisualModel/TorchHand"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, -0.34202, 0, 0.34202, 0.939693, 0, 0.1, 0)
+mesh = SubResource("CylinderMesh_torch")
+
+[node name="FlameMesh" type="MeshInstance3D" parent="VisualModel/TorchHand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, -0.12)
+mesh = SubResource("SphereMesh_torch_flame")
+
+[node name="TorchLight" type="OmniLight3D" parent="VisualModel/TorchHand"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.15)
+light_color = Color(1, 0.72, 0.3, 1)
+light_energy = 1.4
+omni_range = 6.0
+omni_attenuation = 1.3
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+shape = SubResource("SeparationRayShape3D_cam")
+spring_length = 4.2
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.2)
+current = true
+fov = 75.0

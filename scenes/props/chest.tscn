@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://b019chest001"]
+
+[ext_resource type="Script" path="res://scripts/props/chest.gd" id="1_script"]
+[ext_resource type="Material" path="res://materials/mat_wood.tres" id="2_wood"]
+[ext_resource type="Material" path="res://materials/mat_iron.tres" id="3_iron"]
+[ext_resource type="Material" path="res://materials/mat_gold.tres" id="4_gold"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_trigger"]
+radius = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+material = ExtResource("2_wood")
+size = Vector3(1.2, 0.6, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_trim"]
+material = ExtResource("3_iron")
+size = Vector3(1.24, 0.1, 0.84)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gold_pile"]
+material = ExtResource("4_gold")
+size = Vector3(0.9, 0.3, 0.55)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lid"]
+material = ExtResource("2_wood")
+size = Vector3(1.2, 0.25, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sparkle"]
+albedo_color = Color(1, 0.85, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.8, 0.1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_sparkle"]
+material = SubResource("StandardMaterial3D_sparkle")
+size = Vector3(0.04, 0.04, 0.04)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_solid"]
+size = Vector3(1.2, 0.8, 0.8)
+
+[node name="TreasureChest" type="Area3D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_trigger")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("BoxMesh_base")
+
+[node name="TrimBottom" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("BoxMesh_trim")
+
+[node name="TrimTop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("BoxMesh_trim")
+
+[node name="GoldMound" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("BoxMesh_gold_pile")
+
+[node name="LidPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.4)
+
+[node name="LidMesh" type="MeshInstance3D" parent="LidPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0.4)
+mesh = SubResource("BoxMesh_lid")
+
+[node name="TreasureLight" type="OmniLight3D" parent="LidPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.4)
+visible = false
+light_color = Color(1, 0.85, 0.25, 1)
+light_energy = 3.5
+omni_range = 8.0
+
+[node name="GoldParticles" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+emitting = false
+amount = 20
+lifetime = 1.2
+mesh = SubResource("BoxMesh_sparkle")
+direction = Vector3(0, 1, 0)
+spread = 60.0
+gravity = Vector3(0, -0.5, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.5
+scale_amount_min = 0.5
+scale_amount_max = 1.5
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("BoxShape3D_solid")

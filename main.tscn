@@ -1,33 +1,528 @@
 [gd_scene format=3 uid="uid://de15qqbmy7jcc"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_eak7j"]
-size = Vector2(30, 30)
+[ext_resource type="Material" path="res://materials/mat_ground.tres" id="1_ground"]
+[ext_resource type="Material" path="res://materials/mat_stone_wall.tres" id="2_stone"]
+[ext_resource type="Material" path="res://materials/mat_iron.tres" id="3_iron"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="4_player"]
+[ext_resource type="PackedScene" path="res://scenes/props/torch.tscn" id="5_torch"]
+[ext_resource type="PackedScene" path="res://scenes/props/puzzle_pillar.tscn" id="6_pillar"]
+[ext_resource type="PackedScene" path="res://scenes/props/door.tscn" id="7_gate"]
+[ext_resource type="PackedScene" path="res://scenes/props/key_item.tscn" id="8_key"]
+[ext_resource type="PackedScene" path="res://scenes/props/trap.tscn" id="9_trap"]
+[ext_resource type="PackedScene" path="res://scenes/props/chest.tscn" id="10_chest"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="11_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/win_ui.tscn" id="12_win"]
+[ext_resource type="PackedScene" path="res://scenes/ui/game_over_ui.tscn" id="13_gameover"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6negx"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
+sky_top_color = Color(0.04, 0.08, 0.16, 1)
+sky_horizon_color = Color(0.12, 0.16, 0.22, 1)
+ground_bottom_color = Color(0.02, 0.03, 0.05, 1)
+ground_horizon_color = Color(0.08, 0.1, 0.14, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_eak7j"]
-lightmap_size_hint = Vector2i(30, 5)
-material = SubResource("StandardMaterial3D_6negx")
-custom_aabb = AABB(30, 5, 0, 0, 0, 0)
-size = Vector3(30, 5, 1)
+[sub_resource type="Sky" id="Sky_night"]
+sky_material = SubResource("ProceduralSkyMaterial_night")
 
-[node name="Main" type="Node3D" unique_id=1768852]
+[sub_resource type="Environment" id="Environment_dark"]
+background_mode = 2
+sky = SubResource("Sky_night")
+ambient_light_source = 2
+ambient_light_color = Color(0.15, 0.18, 0.25, 1)
+ambient_light_energy = 0.5
+fog_enabled = true
+fog_light_color = Color(0.08, 0.1, 0.15, 1)
+fog_density = 0.015
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1272349701]
-mesh = SubResource("PlaneMesh_eak7j")
+[sub_resource type="BoxMesh" id="BoxMesh_courtyard"]
+material = ExtResource("1_ground")
+size = Vector3(32, 0.5, 32)
 
-[node name="FrontWall" type="MeshInstance3D" parent="." unique_id=2066565495]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -15)
-mesh = SubResource("BoxMesh_eak7j")
+[sub_resource type="BoxShape3D" id="BoxShape3D_courtyard"]
+size = Vector3(32, 0.5, 32)
 
-[node name="BackWall" type="MeshInstance3D" parent="." unique_id=779967775]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 15)
-mesh = SubResource("BoxMesh_eak7j")
+[sub_resource type="BoxMesh" id="BoxMesh_wall_main"]
+material = ExtResource("2_stone")
+size = Vector3(32, 5, 1)
 
-[node name="LeftWall" type="MeshInstance3D" parent="." unique_id=1561667404]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -15, 2.5, 0)
-mesh = SubResource("BoxMesh_eak7j")
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_main"]
+size = Vector3(32, 5, 1)
 
-[node name="RightWall" type="MeshInstance3D" parent="." unique_id=977266891]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15, 2.5, 0)
-mesh = SubResource("BoxMesh_eak7j")
+[sub_resource type="BoxMesh" id="BoxMesh_wall_side"]
+material = ExtResource("2_stone")
+size = Vector3(1, 5, 32)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_side"]
+size = Vector3(1, 5, 32)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_half"]
+material = ExtResource("2_stone")
+size = Vector3(13, 5, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_half"]
+size = Vector3(13, 5, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_lintel"]
+material = ExtResource("2_stone")
+size = Vector3(6, 1.2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_lintel"]
+size = Vector3(6, 1.2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tower"]
+material = ExtResource("2_stone")
+size = Vector3(3.5, 7.5, 3.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tower"]
+size = Vector3(3.5, 7.5, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_altar"]
+material = ExtResource("2_stone")
+size = Vector3(2.0, 0.8, 2.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_altar"]
+size = Vector3(2.0, 0.8, 2.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step"]
+material = ExtResource("2_stone")
+size = Vector3(4.2, 1.0, 1.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_step"]
+size = Vector3(4.2, 1.0, 1.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tunnel_floor"]
+material = ExtResource("2_stone")
+size = Vector3(4.5, 0.5, 15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tunnel_floor"]
+size = Vector3(4.5, 0.5, 15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tunnel_wall"]
+material = ExtResource("2_stone")
+size = Vector3(0.5, 4.5, 15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tunnel_wall"]
+size = Vector3(0.5, 4.5, 15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tunnel_ceiling"]
+material = ExtResource("2_stone")
+size = Vector3(4.5, 0.5, 15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tunnel_ceiling"]
+size = Vector3(4.5, 0.5, 15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vault_floor"]
+material = ExtResource("2_stone")
+size = Vector3(20, 0.5, 22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vault_floor"]
+size = Vector3(20, 0.5, 22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vault_back"]
+material = ExtResource("2_stone")
+size = Vector3(20, 6.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vault_back"]
+size = Vector3(20, 6.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vault_side"]
+material = ExtResource("2_stone")
+size = Vector3(0.5, 6.5, 22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vault_side"]
+size = Vector3(0.5, 6.5, 22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vault_front"]
+material = ExtResource("2_stone")
+size = Vector3(7.75, 6.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vault_front"]
+size = Vector3(7.75, 6.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vault_pillar"]
+material = ExtResource("2_stone")
+size = Vector3(1.4, 6.5, 1.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vault_pillar"]
+size = Vector3(1.4, 6.5, 1.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dais"]
+material = ExtResource("2_stone")
+size = Vector3(4.5, 0.6, 4.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dais"]
+size = Vector3(4.5, 0.6, 4.5)
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dark")
+
+[node name="Moonlight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 15, 0)
+light_color = Color(0.68, 0.78, 0.95, 1)
+light_energy = 0.8
+shadow_enabled = false
+
+[node name="FortCourtyard" type="Node3D" parent="."]
+
+[node name="Ground" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/Ground"]
+mesh = SubResource("BoxMesh_courtyard")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/Ground"]
+shape = SubResource("BoxShape3D_courtyard")
+
+[node name="FrontWall" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/FrontWall"]
+mesh = SubResource("BoxMesh_wall_main")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/FrontWall"]
+shape = SubResource("BoxShape3D_wall_main")
+
+[node name="LeftWall" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/LeftWall"]
+mesh = SubResource("BoxMesh_wall_side")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/LeftWall"]
+shape = SubResource("BoxShape3D_wall_side")
+
+[node name="RightWall" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/RightWall"]
+mesh = SubResource("BoxMesh_wall_side")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/RightWall"]
+shape = SubResource("BoxShape3D_wall_side")
+
+[node name="BackWallLeft" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2.5, 16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/BackWallLeft"]
+mesh = SubResource("BoxMesh_wall_half")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/BackWallLeft"]
+shape = SubResource("BoxShape3D_wall_half")
+
+[node name="BackWallRight" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 2.5, 16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/BackWallRight"]
+mesh = SubResource("BoxMesh_wall_half")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/BackWallRight"]
+shape = SubResource("BoxShape3D_wall_half")
+
+[node name="BackWallLintel" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/BackWallLintel"]
+mesh = SubResource("BoxMesh_wall_lintel")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/BackWallLintel"]
+shape = SubResource("BoxShape3D_wall_lintel")
+
+[node name="TowerNW" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.75, -16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/TowerNW"]
+mesh = SubResource("BoxMesh_tower")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/TowerNW"]
+shape = SubResource("BoxShape3D_tower")
+
+[node name="TowerNE" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3.75, -16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/TowerNE"]
+mesh = SubResource("BoxMesh_tower")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/TowerNE"]
+shape = SubResource("BoxShape3D_tower")
+
+[node name="TowerSW" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.75, 16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/TowerSW"]
+mesh = SubResource("BoxMesh_tower")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/TowerSW"]
+shape = SubResource("BoxShape3D_tower")
+
+[node name="TowerSE" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3.75, 16)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/TowerSE"]
+mesh = SubResource("BoxMesh_tower")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/TowerSE"]
+shape = SubResource("BoxShape3D_tower")
+
+[node name="TorchCourtyard1" parent="FortCourtyard" instance=ExtResource("5_torch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, 15.4)
+
+[node name="TorchCourtyard2" parent="FortCourtyard" instance=ExtResource("5_torch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, 15.4)
+
+[node name="TorchCourtyard3" parent="FortCourtyard" instance=ExtResource("5_torch")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.5, -15.4)
+
+[node name="PillarSun" parent="FortCourtyard" instance=ExtResource("6_pillar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 8)
+pillar_id = 1
+rune_name = "Sun"
+
+[node name="PillarMoon" parent="FortCourtyard" instance=ExtResource("6_pillar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 8)
+pillar_id = 2
+rune_name = "Moon"
+
+[node name="PillarStar" parent="FortCourtyard" instance=ExtResource("6_pillar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -8)
+pillar_id = 3
+rune_name = "Star"
+
+[node name="KeyAltar" type="StaticBody3D" parent="FortCourtyard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.4, -9)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FortCourtyard/KeyAltar"]
+mesh = SubResource("BoxMesh_altar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FortCourtyard/KeyAltar"]
+shape = SubResource("BoxShape3D_altar")
+
+[node name="KeyItem" parent="FortCourtyard" instance=ExtResource("8_key")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.8, -9)
+
+[node name="PortcullisGate" parent="." instance=ExtResource("7_gate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 16)
+
+[node name="CatacombDescent" type="Node3D" parent="."]
+
+[node name="Step1" type="StaticBody3D" parent="CatacombDescent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 17.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CatacombDescent/Step1"]
+mesh = SubResource("BoxMesh_step")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CatacombDescent/Step1"]
+shape = SubResource("BoxShape3D_step")
+
+[node name="Step2" type="StaticBody3D" parent="CatacombDescent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6, 19.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CatacombDescent/Step2"]
+mesh = SubResource("BoxMesh_step")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CatacombDescent/Step2"]
+shape = SubResource("BoxShape3D_step")
+
+[node name="Step3" type="StaticBody3D" parent="CatacombDescent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.6, 20.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CatacombDescent/Step3"]
+mesh = SubResource("BoxMesh_step")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CatacombDescent/Step3"]
+shape = SubResource("BoxShape3D_step")
+
+[node name="Step4" type="StaticBody3D" parent="CatacombDescent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.6, 22.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CatacombDescent/Step4"]
+mesh = SubResource("BoxMesh_step")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CatacombDescent/Step4"]
+shape = SubResource("BoxShape3D_step")
+
+[node name="Step5" type="StaticBody3D" parent="CatacombDescent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.6, 23.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CatacombDescent/Step5"]
+mesh = SubResource("BoxMesh_step")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CatacombDescent/Step5"]
+shape = SubResource("BoxShape3D_step")
+
+[node name="UndergroundTunnel" type="Node3D" parent="."]
+
+[node name="TunnelFloor" type="StaticBody3D" parent="UndergroundTunnel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.25, 31)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UndergroundTunnel/TunnelFloor"]
+mesh = SubResource("BoxMesh_tunnel_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UndergroundTunnel/TunnelFloor"]
+shape = SubResource("BoxShape3D_tunnel_floor")
+
+[node name="TunnelCeiling" type="StaticBody3D" parent="UndergroundTunnel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 31)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UndergroundTunnel/TunnelCeiling"]
+mesh = SubResource("BoxMesh_tunnel_ceiling")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UndergroundTunnel/TunnelCeiling"]
+shape = SubResource("BoxShape3D_tunnel_ceiling")
+
+[node name="TunnelWallLeft" type="StaticBody3D" parent="UndergroundTunnel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25, -3.0, 31)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UndergroundTunnel/TunnelWallLeft"]
+mesh = SubResource("BoxMesh_tunnel_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UndergroundTunnel/TunnelWallLeft"]
+shape = SubResource("BoxShape3D_tunnel_wall")
+
+[node name="TunnelWallRight" type="StaticBody3D" parent="UndergroundTunnel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.25, -3.0, 31)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UndergroundTunnel/TunnelWallRight"]
+mesh = SubResource("BoxMesh_tunnel_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UndergroundTunnel/TunnelWallRight"]
+shape = SubResource("BoxShape3D_tunnel_wall")
+
+[node name="TorchTunnel1" parent="UndergroundTunnel" instance=ExtResource("5_torch")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.95, -2.8, 26.5)
+
+[node name="TorchTunnel2" parent="UndergroundTunnel" instance=ExtResource("5_torch")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 1.95, -2.8, 31.0)
+
+[node name="TorchTunnel3" parent="UndergroundTunnel" instance=ExtResource("5_torch")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.95, -2.8, 35.5)
+
+[node name="TrapCorridor" parent="UndergroundTunnel" instance=ExtResource("9_trap")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.0, 31.0)
+
+[node name="TreasureChamber" type="Node3D" parent="."]
+
+[node name="VaultFloor" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.25, 49)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultFloor"]
+mesh = SubResource("BoxMesh_vault_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultFloor"]
+shape = SubResource("BoxShape3D_vault_floor")
+
+[node name="VaultBack" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.0, 60)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultBack"]
+mesh = SubResource("BoxMesh_vault_back")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultBack"]
+shape = SubResource("BoxShape3D_vault_back")
+
+[node name="VaultLeft" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, -2.0, 49)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultLeft"]
+mesh = SubResource("BoxMesh_vault_side")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultLeft"]
+shape = SubResource("BoxShape3D_vault_side")
+
+[node name="VaultRight" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -2.0, 49)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultRight"]
+mesh = SubResource("BoxMesh_vault_side")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultRight"]
+shape = SubResource("BoxShape3D_vault_side")
+
+[node name="VaultFrontLeft" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.125, -2.0, 38.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultFrontLeft"]
+mesh = SubResource("BoxMesh_vault_front")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultFrontLeft"]
+shape = SubResource("BoxShape3D_vault_front")
+
+[node name="VaultFrontRight" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.125, -2.0, 38.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultFrontRight"]
+mesh = SubResource("BoxMesh_vault_front")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultFrontRight"]
+shape = SubResource("BoxShape3D_vault_front")
+
+[node name="VaultPillar1" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -2.0, 44)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultPillar1"]
+mesh = SubResource("BoxMesh_vault_pillar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultPillar1"]
+shape = SubResource("BoxShape3D_vault_pillar")
+
+[node name="VaultPillar2" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -2.0, 44)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultPillar2"]
+mesh = SubResource("BoxMesh_vault_pillar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultPillar2"]
+shape = SubResource("BoxShape3D_vault_pillar")
+
+[node name="VaultPillar3" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -2.0, 54)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultPillar3"]
+mesh = SubResource("BoxMesh_vault_pillar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultPillar3"]
+shape = SubResource("BoxShape3D_vault_pillar")
+
+[node name="VaultPillar4" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -2.0, 54)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/VaultPillar4"]
+mesh = SubResource("BoxMesh_vault_pillar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/VaultPillar4"]
+shape = SubResource("BoxShape3D_vault_pillar")
+
+[node name="Dais" type="StaticBody3D" parent="TreasureChamber"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.7, 52)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TreasureChamber/Dais"]
+mesh = SubResource("BoxMesh_dais")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreasureChamber/Dais"]
+shape = SubResource("BoxShape3D_dais")
+
+[node name="TreasureChest" parent="TreasureChamber" instance=ExtResource("10_chest")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.4, 52)
+
+[node name="TorchVault1" parent="TreasureChamber" instance=ExtResource("5_torch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, -2.8, 44)
+
+[node name="TorchVault2" parent="TreasureChamber" instance=ExtResource("5_torch")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4.2, -2.8, 44)
+
+[node name="TorchVault3" parent="TreasureChamber" instance=ExtResource("5_torch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, -2.8, 54)
+
+[node name="TorchVault4" parent="TreasureChamber" instance=ExtResource("5_torch")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4.2, -2.8, 54)
+
+[node name="Player" parent="." instance=ExtResource("4_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="UI" instance=ExtResource("11_hud")]
+
+[node name="WinUI" parent="UI" instance=ExtResource("12_win")]
+
+[node name="GameOverUI" parent="UI" instance=ExtResource("13_gameover")]

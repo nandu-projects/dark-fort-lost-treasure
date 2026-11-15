@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "Ground"
+albedo_color = Color(0.24, 0.25, 0.22, 1)
+roughness = 0.95
+uv1_scale = Vector3(4, 4, 4)
+uv1_triplanar = true

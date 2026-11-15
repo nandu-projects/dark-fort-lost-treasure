@@ -1,0 +1,36 @@
+name: Dark Fort CI / CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test_and_validate:
+    name: Run Automated Tests & Verify Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot Engine
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.3.0
+          use-dotnet: false
+
+      - name: Verify Godot Installation
+        run: godot --version
+
+      - name: Run Automated Gameplay Test Suite
+        run: |
+          godot --headless --path . "res://tests/test_gameplay.tscn"
+
+      - name: Check Project Structure & Export Presets
+        run: |
+          test -f project.godot
+          test -f export_presets.cfg
+          test -f main.tscn
+          echo "All core assets and configuration files verified!"

@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://c804gate001"]
+
+[ext_resource type="Script" path="res://scripts/props/door.gd" id="1_script"]
+[ext_resource type="Material" path="res://materials/mat_stone_wall.tres" id="2_stone"]
+[ext_resource type="Material" path="res://materials/mat_iron.tres" id="3_iron"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_pillar"]
+material = ExtResource("2_stone")
+size = Vector3(0.8, 5.0, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pillar"]
+size = Vector3(0.8, 5.0, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lintel"]
+material = ExtResource("2_stone")
+size = Vector3(4.6, 0.8, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bars"]
+material = ExtResource("3_iron")
+size = Vector3(3.0, 4.2, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bars"]
+size = Vector3(3.0, 4.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
+size = Vector3(4.0, 3.0, 3.0)
+
+[node name="PortcullisGate" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="FrameLeft" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, 2.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FrameLeft"]
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrameLeft"]
+shape = SubResource("BoxShape3D_pillar")
+
+[node name="FrameRight" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 2.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FrameRight"]
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrameRight"]
+shape = SubResource("BoxShape3D_pillar")
+
+[node name="FrameTop" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FrameTop"]
+mesh = SubResource("BoxMesh_lintel")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrameTop"]
+shape = SubResource("BoxShape3D_pillar")
+
+[node name="GateModel" type="Node3D" parent="."]
+
+[node name="GateBars" type="StaticBody3D" parent="GateModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GateModel/GateBars"]
+mesh = SubResource("BoxMesh_bars")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GateModel/GateBars"]
+shape = SubResource("BoxShape3D_bars")
+
+[node name="InteractArea" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_trigger")

@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://b8401pillar001"]
+
+[ext_resource type="Script" path="res://scripts/props/puzzle_pillar.gd" id="1_script"]
+[ext_resource type="Material" path="res://materials/mat_stone_wall.tres" id="2_stone"]
+[ext_resource type="Material" path="res://materials/mat_iron.tres" id="3_iron"]
+[ext_resource type="Material" path="res://materials/mat_rune_off.tres" id="4_rune_off"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_interact"]
+radius = 2.2
+height = 3.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
+material = ExtResource("2_stone")
+size = Vector3(1.2, 0.4, 1.2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_column"]
+material = ExtResource("2_stone")
+top_radius = 0.45
+bottom_radius = 0.5
+height = 2.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_top"]
+material = ExtResource("3_iron")
+size = Vector3(1.0, 0.2, 1.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_crystal"]
+material = ExtResource("4_rune_off")
+size = Vector3(0.4, 0.5, 0.4)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_solid"]
+radius = 0.55
+height = 2.8
+
+[node name="PuzzlePillar" type="Area3D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="InteractShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("CylinderShape3D_interact")
+
+[node name="Pedestal" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Column" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("CylinderMesh_column")
+
+[node name="Top" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
+mesh = SubResource("BoxMesh_top")
+
+[node name="RuneGem" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 3.1, 0)
+mesh = SubResource("BoxMesh_crystal")
+
+[node name="RuneLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+visible = false
+light_color = Color(0, 0.85, 1, 1)
+light_energy = 2.0
+omni_range = 6.0
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+shape = SubResource("CylinderShape3D_solid")

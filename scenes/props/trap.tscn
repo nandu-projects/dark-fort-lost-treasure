@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://e481trap001"]
+
+[ext_resource type="Script" path="res://scripts/props/trap.gd" id="1_script"]
+[ext_resource type="Material" path="res://materials/mat_iron.tres" id="2_iron"]
+[ext_resource type="Material" path="res://materials/mat_danger.tres" id="3_danger"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_area"]
+size = Vector3(2.4, 1.8, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_base"]
+material = ExtResource("2_iron")
+size = Vector3(2.5, 0.1, 2.5)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_spike"]
+material = ExtResource("3_danger")
+top_radius = 0.01
+bottom_radius = 0.09
+height = 1.0
+
+[node name="SpikeTrap" type="Area3D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("BoxShape3D_area")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("BoxMesh_base")
+
+[node name="WarningLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+visible = false
+light_color = Color(1, 0.2, 0.1, 1)
+light_energy = 2.0
+omni_range = 3.5
+
+[node name="Spikes" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+
+[node name="Spike1" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.5, -0.6)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike2" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.6)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike3" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.5, -0.6)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike4" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.5, 0)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike5" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike6" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.5, 0)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike7" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.5, 0.6)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike8" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.6)
+mesh = SubResource("CylinderMesh_spike")
+
+[node name="Spike9" type="MeshInstance3D" parent="Spikes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.5, 0.6)
+mesh = SubResource("CylinderMesh_spike")
