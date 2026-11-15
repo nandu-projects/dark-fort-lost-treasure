@@ -1,0 +1,30 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+export/
+build/
+dist/
+*.translation
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE configs
+.idea/
+.vscode/
+
+# Secrets & Environment
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.cert
+credentials.json
+secret.json
+
+# Caches
+__pycache__/
+node_modules/

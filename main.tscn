@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://de15qqbmy7jcc"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_eak7j"]
+size = Vector2(30, 30)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6negx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_eak7j"]
+lightmap_size_hint = Vector2i(30, 5)
+material = SubResource("StandardMaterial3D_6negx")
+custom_aabb = AABB(30, 5, 0, 0, 0, 0)
+size = Vector3(30, 5, 1)
+
+[node name="Main" type="Node3D" unique_id=1768852]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1272349701]
+mesh = SubResource("PlaneMesh_eak7j")
+
+[node name="FrontWall" type="MeshInstance3D" parent="." unique_id=2066565495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -15)
+mesh = SubResource("BoxMesh_eak7j")
+
+[node name="BackWall" type="MeshInstance3D" parent="." unique_id=779967775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 15)
+mesh = SubResource("BoxMesh_eak7j")
+
+[node name="LeftWall" type="MeshInstance3D" parent="." unique_id=1561667404]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -15, 2.5, 0)
+mesh = SubResource("BoxMesh_eak7j")
+
+[node name="RightWall" type="MeshInstance3D" parent="." unique_id=977266891]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15, 2.5, 0)
+mesh = SubResource("BoxMesh_eak7j")
