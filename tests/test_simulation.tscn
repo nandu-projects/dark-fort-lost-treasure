@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://df70simulation001"]
+
+[ext_resource type="Script" path="res://tests/test_simulation.gd" id="1_sim"]
+
+[node name="SimulationRunner" type="Node"]
+script = ExtResource("1_sim")

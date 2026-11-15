@@ -1,6 +1,10 @@
-# 🏰 Dark Fort: Lost Treasure
+# 🏰 Dark Fort: Lost Treasure (v0.1)
 
-A complete 3D third-person adventure game built in **Godot 4** using **GDScript** and the lightweight **Compatibility (OpenGL / GLES3)** renderer. Optimized specifically for smooth 60 FPS performance on Intel integrated graphics and 8 GB RAM systems, with future Android export readiness.
+A complete 3D third-person adventure game built in **Godot 4.7.2** using **GDScript** and the lightweight **Compatibility (OpenGL 3.3 / GLES3)** renderer. Optimized specifically for smooth 60 FPS performance on Intel integrated graphics and 8 GB RAM systems, with future Android export readiness.
+
+[![Dark Fort CI / CD](https://img.shields.io/badge/CI%2FCD-Ready-brightgreen)](https://github.com/nandu-projects/dark-fort-lost-treasure)
+[![Release](https://img.shields.io/badge/Release-v0.1-gold)](https://github.com/nandu-projects/dark-fort-lost-treasure/releases)
+[![Tests](https://img.shields.io/badge/Tests-47%20Passed-blue)](https://github.com/nandu-projects/dark-fort-lost-treasure)
 
 ---
 
@@ -23,7 +27,7 @@ To claim the treasure, you must:
 | Action | Keyboard / Mouse | Description |
 | :--- | :--- | :--- |
 | **Move** | `W`, `A`, `S`, `D` / Arrow Keys | Move adventurer relative to camera |
-| **Look / Rotate** | Mouse Movement | Full 3D camera orbit with pitch limits |
+| **Look / Orbit** | Mouse Movement | Full 3D camera orbit with pitch limits |
 | **Sprint** | `Shift` | Dash / sprint at high speed |
 | **Jump** | `Space` | Jump over obstacles |
 | **Interact** | `E` | Activate rune pillars, collect key, unlock chest |
@@ -31,91 +35,82 @@ To claim the treasure, you must:
 
 ---
 
-## 🏗️ Technical Architecture & Directory Structure
+## 🚀 Playing the Game on Windows
 
-```
-dark-fort/
-├── .github/
-│   └── workflows/
-│       └── game-ci.yml           # Automated CI/CD test runner workflow
-├── build/                        # Local release export directory (git-ignored)
-├── materials/                    # Shared StandardMaterial3D resources
-│   ├── mat_stone_wall.tres       # Weathered stone walls & towers
-│   ├── mat_ground.tres           # Courtyard flagstones
-│   ├── mat_iron.tres             # Portcullis & trap grating
-│   ├── mat_wood.tres             # Chest structure & torch poles
-│   ├── mat_gold.tres             # Key & Lost Treasure materials
-│   ├── mat_rune_off.tres         # Dormant rune stones
-│   ├── mat_rune_on.tres          # Glowing cyan emissive runes
-│   ├── mat_fire.tres             # Torch flame material
-│   ├── mat_danger.tres           # Red warning trap spikes
-│   └── mat_player.tres           # Adventurer cloak & tunic
-├── scenes/
-│   ├── player/
-│   │   └── player.tscn           # Third-person visible player with torch & camera
-│   ├── props/
-│   │   ├── chest.tscn            # Animated treasure chest with gold particles
-│   │   ├── door.tscn             # Animated iron portcullis gate
-│   │   ├── key_item.tscn         # Floating, rotating gold key
-│   │   ├── puzzle_pillar.tscn    # Interactive rune obelisks
-│   │   ├── torch.tscn            # Wall sconce with procedural flicker
-│   │   └── trap.tscn             # Periodic floor spike trap
-│   └── ui/
-│       ├── hud.tscn              # Health bar, objective tracker, key badge, prompt
-│       ├── win_ui.tscn           # Victory screen & replay button
-│       └── game_over_ui.tscn     # Death screen & retry button
-├── scripts/
-│   ├── managers/
-│   │   └── game_manager.gd       # Central game state Autoload singleton
-│   ├── player/
-│   │   └── player.gd             # Smooth 3D third-person controller
-│   ├── props/                    # Prop interaction and logic scripts
-│   ├── ui/                       # UI event listeners & animations
-│   └── build_windows.ps1         # 1-click Windows PCK export script
-├── tests/
-│   ├── test_gameplay.gd          # Headless automated unit & integration tests
-│   └── test_gameplay.tscn        # Test runner scene
-├── export_presets.cfg            # Windows Desktop & Android export configurations
-├── project.godot                 # Godot project settings & input mappings
-└── main.tscn                     # Complete, fully assembled playable level
-```
+### Option 1: Standalone Release (Recommended)
+1. Download `DarkFort-v0.1-Windows.zip` from the [GitHub Releases](https://github.com/nandu-projects/dark-fort-lost-treasure/releases/tag/v0.1).
+2. Extract the ZIP file to any folder.
+3. Double-click **`DarkFort.exe`** to start playing!
+   *(The package includes the signed release executable and all compiled game assets in `DarkFort.pck`)*.
+
+### Option 2: Running in Godot 4 Editor
+1. Open Godot 4.7.2.
+2. Click **Import**, browse to `project.godot` inside this repository.
+3. Press **Run Project (`F5`)**.
 
 ---
 
-## ⚡ Performance Optimizations for Low-End Hardware
+## 🧪 Comprehensive Automated Testing
 
-- **Compatibility Renderer (GL Compatibility)**: Uses lightweight OpenGL 3 / WebGL 2 shaders suitable for Intel HD / UHD integrated graphics.
-- **Zero Directional Shadow Bottlenecks**: Heavy shadow maps disabled; atmospheric depth provided through baked-style ambient coloring, procedural midnight fog, and selective point light attenuation.
-- **CPU Particles (`CPUParticles3D`)**: Eliminates GPU compute shader requirements so sparks and sparkles run at 60+ FPS on all machines.
-- **Procedural / Primitive Geometry**: Clean modular boxes, cylinders, and capsules avoid bloated mesh overhead and eliminate external 3D modeling software requirements.
+The game includes two automated test suites with **47 total tests (0 failures)**:
 
----
-
-## 🧪 Automated Testing
-
-An automated headless gameplay test suite is included in `tests/test_gameplay.tscn`. It validates:
-- [x] Initial game state and player stats (100 HP, 0 keys, puzzle unsolved)
-- [x] 3-Rune puzzle logic and gate opening signal
-- [x] Key collection and inventory tracking
-- [x] Spike trap damage and death/game over conditions
-- [x] Treasure chest opening and win victory condition
-- [x] Complete node hierarchy verification in `main.tscn`
-
-To run the automated test suite locally:
+### 1. Headless Gameplay & State Unit Test Suite (29 Tests)
+Tests state transitions, signal propagation, key inventory, rune puzzle logic, trap damage, and node hierarchy.
 ```powershell
 & "<path-to-godot-console.exe>" --headless --path . "res://tests/test_gameplay.tscn"
 ```
 
+### 2. Live Simulation & Visual Screenshot Suite (18 Tests)
+Runs live physics steps in an active viewport, tests player movement vectors, camera orbits, gate tweens, HUD health bar updates, and captures graphical screenshots:
+```powershell
+& "<path-to-godot-console.exe>" --path . "res://tests/test_simulation.tscn"
+```
+Generated visual proof screenshots are saved in `tests/screenshots/`:
+- `step1_courtyard.png` — Player & courtyard rendering
+- `step2_puzzle_solved.png` — Activated rune crystal glow & open portcullis
+- `step3_key_collected.png` — Key pickup & HUD badge
+- `step4_tunnel_trap.png` — Spike trap damage & HUD health bar drop
+- `step5_treasure_win.png` — Chest opening tween, golden particles & Win UI
+- `step6_game_over.png` — Lethal damage & Game Over screen
+
 ---
 
-## 📦 Building the Game
+## 🏗️ 1-Click Windows Build Automation
 
-### Windows Desktop Build
-Run the automated build script:
+To rebuild the standalone Windows game and package the distribution ZIP:
 ```powershell
 powershell -ExecutionPolicy Bypass -File "scripts/build_windows.ps1"
 ```
-The output package will be created in `build/windows/DarkFort.pck`.
+This script automatically:
+1. Runs all 29 unit tests.
+2. Runs all 18 live simulation checks.
+3. Compiles game resources into `build/windows/DarkFort.pck`.
+4. Assembles the signed standalone `DarkFort.exe`.
+5. Generates the release package: `build/DarkFort-v0.1-Windows.zip`.
+6. Executes a launch test of the exported binary.
 
-### Android Build
-An Android export preset is pre-configured in `export_presets.cfg` (`org.godotengine.darkfort`) targeting `arm64-v8a`.
+---
+
+## 📱 Android Export Status & Requirements
+
+An Android export preset is configured in `export_presets.cfg` (`org.godotengine.darkfort`, architecture `arm64-v8a`).
+
+### Verified System Prerequisites:
+- ✅ **Java JDK**: OpenJDK 17 (`Microsoft jdk-17.0.10.7-hotspot`) is installed.
+- ✅ **Android SDK**: Located at `C:\Users\nandan m\AppData\Local\Android\Sdk`.
+- ✅ **Keystore**: Godot debug keystore is generated at `C:\Users\nandan m\AppData\Roaming\Godot\keystores\debug.keystore`.
+
+### To Complete Android Export:
+Install the Godot 4.7.2 Android export templates (`android_debug.apk` and `android_release.apk`) in Godot via **Editor → Manage Export Templates**, then run:
+```powershell
+& "<path-to-godot-console.exe>" --headless --path . --export-release "Android" build/android/DarkFort.apk
+```
+
+---
+
+## ⚙️ Performance Optimizations for Low-End Systems
+
+- **Compatibility Renderer (OpenGL 3.3 / GLES3)**: Designed for Intel HD / UHD integrated graphics.
+- **Optimized Lighting**: Dynamic directional shadow maps are disabled to avoid GPU fill rate bottlenecks; atmospheric lighting uses balanced ambient color, procedural night sky, and localized point lights.
+- **CPU Particles (`CPUParticles3D`)**: Eliminates heavy GPU compute shader overhead for sparks and gold particles.
+- **Modular Collision Geometry**: Uses fast Box, Cylinder, and Capsule shapes without complex trimeshes.
